@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Profile | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="eyebrow">Profile</p>
+    <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
+    <p class="muted">{{ request.user.email }}</p>
+    <div class="profile-meta">
+        <article class="mini-card">
+            <h2>Bio</h2>
+            <p>{{ request.user.bio|default:"No bio added yet." }}</p>
+        </article>
+        <article class="mini-card">
+            <h2>Skills</h2>
+            <p>{{ request.user.listed_skills|default:"No skills listed yet." }}</p>
+        </article>
+    </div>
+    <a class="primary-button" href="{% url 'profile_edit' %}">Edit Profile</a>
+</section>
+{% endblock %}

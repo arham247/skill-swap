@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Review | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="eyebrow">Review</p>
+    <h1>Review {{ booking.tutor.username }}</h1>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="primary-button">Submit Review</button>
+    </form>
+</section>
+{% endblock %}

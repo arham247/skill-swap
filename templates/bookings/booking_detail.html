@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Booking | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="tag">{{ booking.get_status_display }}</p>
+    <h1>{{ booking.listing.title }}</h1>
+    <p class="muted">Learner: {{ booking.learner.username }} | Tutor: {{ booking.tutor.username }}</p>
+    <p><strong>Requested time:</strong> {{ booking.requested_time|date:"M d, Y H:i" }}</p>
+    {% if booking.message %}<p>{{ booking.message }}</p>{% endif %}
+
+    <div class="action-row">
+        {% if user == booking.tutor and booking.status == "pending" %}
+            <form method="post" action="{% url 'booking_accept' booking.pk %}">{% csrf_token %}<button class="primary-button" type="submit">Accept</button></form>
+            <form method="post" action="{% url 'booking_reject' booking.pk %}">{% csrf_token %}<button class="secondary-button" type="submit">Reject</button></form>
+        {% endif %}
+        {% if user == booking.tutor and booking.status == "accepted" %}
+            <form method="post" action="{% url 'booking_complete' booking.pk %}">{% csrf_token %}<button class="primary-button" type="submit">Mark Completed</button></form>
+        {% endif %}
+        {% if booking.status == "pending" or booking.status == "accepted" %}
+            <form method="post" action="{% url 'booking_cancel' booking.pk %}">{% csrf_token %}<button class="secondary-button" type="submit">Cancel</button></form>
+        {% endif %}
+        {% if can_review %}
+            <a class="primary-button" href="{% url 'review_create' booking.pk %}">Leave Review</a>
+        {% endif %}
+    </div>
+</section>
+
+{% if booking.review %}
+<section class="panel">
+    <p class="eyebrow">Review</p>
+    <h2>{{ booking.review.rating }}/5 rating</h2>
+    <p>{{ booking.review.comment|default:"No comment added." }}</p>
+</section>
+{% endif %}
+
+<section class="panel">
+    <h2>Messages</h2>
+    <div class="stack-list">
+        {% for booking_message in messages_for_booking %}
+            <article class="mini-card">
+                <p><strong>{{ booking_message.sender.username }}</strong></p>
+                <p>{{ booking_message.body }}</p>
+                <p class="muted">{{ booking_message.created_at|date:"M d, Y H:i" }}</p>
+            </article>
+        {% empty %}
+            <p class="muted">No messages yet.</p>
+        {% endfor %}
+    </div>
+
+    {% if booking.can_message %}
+        <form method="post" class="form-grid">
+            {% csrf_token %}
+            {{ message_form.as_p }}
+            <button type="submit" class="primary-button">Send Message</button>
+        </form>
+    {% else %}
+        <p class="muted">Messages open after the tutor accepts the booking.</p>
+    {% endif %}
+</section>
+{% endblock %}

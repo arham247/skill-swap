@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ listing.title }} | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="tag">{{ listing.get_category_display }}</p>
+    <h1>{{ listing.title }}</h1>
+    <p class="muted">Published by {{ listing.tutor.username }} on {{ listing.created_at|date:"M d, Y" }}</p>
+    <p>{{ listing.description }}</p>
+    <p><strong>Availability:</strong> {{ listing.availability }}</p>
+
+    {% if user == listing.tutor %}
+        <div class="action-row">
+            <a class="primary-button" href="{% url 'listing_edit' listing.pk %}">Edit</a>
+            <a class="secondary-button" href="{% url 'listing_delete' listing.pk %}">Delete</a>
+        </div>
+    {% elif user.is_authenticated %}
+        <div class="action-row">
+            {% if existing_booking %}
+                <a class="primary-button" href="{% url 'booking_detail' existing_booking.pk %}">View Booking</a>
+                <p class="muted">You already have a {{ existing_booking.get_status_display|lower }} booking for this listing.</p>
+            {% else %}
+                <a class="primary-button" href="{% url 'booking_create' listing.pk %}">Request Session</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <a class="primary-button" href="{% url 'login' %}?next={% url 'booking_create' listing.pk %}">Login to Request Session</a>
+    {% endif %}
+</section>
+{% endblock %}

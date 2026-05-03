@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Post Skill Request | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="eyebrow">Skill request</p>
+    <h1>Post what you want to learn</h1>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="primary-button">Publish Request</button>
+    </form>
+</section>
+{% endblock %}

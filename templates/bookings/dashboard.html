@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="eyebrow">Sprint 2</p>
+    <h1>Your learning dashboard</h1>
+    <div class="action-row">
+        <a class="primary-button" href="{% url 'skill_request_create' %}">Post Skill Request</a>
+        <a class="secondary-button" href="{% url 'skill_request_list' %}">Browse Requests</a>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Sessions you requested</h2>
+    <div class="stack-list">
+        {% for booking in learner_bookings %}
+            <article class="mini-card">
+                <p class="tag">{{ booking.get_status_display }}</p>
+                <h3><a href="{% url 'booking_detail' booking.pk %}">{{ booking.listing.title }}</a></h3>
+                <p class="muted">Tutor: {{ booking.tutor.username }} | {{ booking.requested_time|date:"M d, Y H:i" }}</p>
+            </article>
+        {% empty %}
+            <p class="muted">No requested sessions yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Sessions students requested from you</h2>
+    <div class="stack-list">
+        {% for booking in tutor_bookings %}
+            <article class="mini-card">
+                <p class="tag">{{ booking.get_status_display }}</p>
+                <h3><a href="{% url 'booking_detail' booking.pk %}">{{ booking.listing.title }}</a></h3>
+                <p class="muted">Learner: {{ booking.learner.username }} | {{ booking.requested_time|date:"M d, Y H:i" }}</p>
+            </article>
+        {% empty %}
+            <p class="muted">No tutor sessions yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Your skill requests</h2>
+    <div class="stack-list">
+        {% for skill_request in skill_requests %}
+            <article class="mini-card">
+                <p class="tag">{{ skill_request.get_status_display }}</p>
+                <h3><a href="{% url 'skill_request_detail' skill_request.pk %}">{{ skill_request.title }}</a></h3>
+                <p class="muted">{{ skill_request.applications.count }} application{{ skill_request.applications.count|pluralize }}</p>
+            </article>
+        {% empty %}
+            <p class="muted">No skill requests posted yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Your applications</h2>
+    <div class="stack-list">
+        {% for application in applications %}
+            <article class="mini-card">
+                <p class="tag">{{ application.get_status_display }}</p>
+                <h3><a href="{% url 'skill_request_detail' application.skill_request.pk %}">{{ application.skill_request.title }}</a></h3>
+            </article>
+        {% empty %}
+            <p class="muted">No request applications yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

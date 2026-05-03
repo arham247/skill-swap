@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit Listing{% else %}Create Listing{% endif %} | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="eyebrow">Listings</p>
+    <h1>{% if form.instance.pk %}Update your skill listing{% else %}Create a new skill listing{% endif %}</h1>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="primary-button">{% if form.instance.pk %}Save Changes{% else %}Publish Listing{% endif %}</button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Listings | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="eyebrow">Peer-to-peer skill exchange</p>
+    <h1>Discover tutors and publish your own skills</h1>
+    <p class="muted">Sprint 1 includes authentication, profile management, and listing creation with search and category filtering.</p>
+</section>
+
+<section class="panel">
+    <form method="get" class="search-bar">
+        <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search by title, tutor, or description">
+        <select name="category">
+            <option value="">All categories</option>
+            {% for value, label in categories %}
+                <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="primary-button">Search</button>
+    </form>
+</section>
+
+<section class="card-grid">
+    {% for listing in listings %}
+        <article class="listing-card">
+            <p class="tag">{{ listing.get_category_display }}</p>
+            <h2><a href="{% url 'listing_detail' listing.pk %}">{{ listing.title }}</a></h2>
+            <p class="muted">By {{ listing.tutor.username }}</p>
+            <p>{{ listing.description|truncatewords:24 }}</p>
+            <p><strong>Availability:</strong> {{ listing.availability }}</p>
+        </article>
+    {% empty %}
+        <article class="listing-card">
+            <h2>No listings found</h2>
+            <p>Create the first skill listing to start the marketplace.</p>
+        </article>
+    {% endfor %}
+</section>
+{% endblock %}

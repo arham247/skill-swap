@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Skill Requests | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="eyebrow">Reverse marketplace</p>
+    <h1>Find students asking for help</h1>
+    {% if user.is_authenticated %}
+        <a class="primary-button" href="{% url 'skill_request_create' %}">Post Skill Request</a>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <form method="get" class="search-bar">
+        <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search requests">
+        <select name="category">
+            <option value="">All categories</option>
+            {% for value, label in categories %}
+                <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="primary-button">Search</button>
+    </form>
+</section>
+
+<section class="card-grid">
+    {% for skill_request in skill_requests %}
+        <article class="listing-card">
+            <p class="tag">{{ skill_request.get_category_display }}</p>
+            <h2><a href="{% url 'skill_request_detail' skill_request.pk %}">{{ skill_request.title }}</a></h2>
+            <p class="muted">Posted by {{ skill_request.learner.username }}</p>
+            <p>{{ skill_request.description|truncatewords:24 }}</p>
+            <p><strong>Availability:</strong> {{ skill_request.availability }}</p>
+        </article>
+    {% empty %}
+        <article class="listing-card">
+            <h2>No requests found</h2>
+            <p>Post a skill request to invite tutors to apply.</p>
+        </article>
+    {% endfor %}
+</section>
+{% endblock %}

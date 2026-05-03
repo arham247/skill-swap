@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Listing | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="eyebrow">Danger zone</p>
+    <h1>Delete "{{ object.title }}"?</h1>
+    <p class="muted">This action removes the listing from the marketplace.</p>
+    <form method="post" class="action-row">
+        {% csrf_token %}
+        <button type="submit" class="primary-button">Confirm Delete</button>
+        <a class="secondary-button" href="{% url 'listing_detail' object.pk %}">Cancel</a>
+    </form>
+</section>
+{% endblock %}

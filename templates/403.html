@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Access denied | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="eyebrow">Access denied</p>
+    <h1>You do not have permission to view this page.</h1>
+    <a class="secondary-button" href="{% url 'listing_list' %}">Back to listings</a>
+</section>
+{% endblock %}

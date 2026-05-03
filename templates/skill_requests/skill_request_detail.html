@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ skill_request.title }} | SkillSwap{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <p class="tag">{{ skill_request.get_status_display }}</p>
+    <h1>{{ skill_request.title }}</h1>
+    <p class="muted">Posted by {{ skill_request.learner.username }} on {{ skill_request.created_at|date:"M d, Y" }}</p>
+    <p>{{ skill_request.description }}</p>
+    <p><strong>Availability:</strong> {{ skill_request.availability }}</p>
+
+    {% if user.is_authenticated and user != skill_request.learner and skill_request.status == "open" %}
+        <a class="primary-button" href="{% url 'skill_request_apply' skill_request.pk %}">Apply to Teach</a>
+    {% endif %}
+</section>
+
+{% if user == skill_request.learner %}
+<section class="panel">
+    <h2>Applications</h2>
+    <div class="stack-list">
+        {% for application in skill_request.applications.all %}
+            <article class="mini-card">
+                <p class="tag">{{ application.get_status_display }}</p>
+                <h3>{{ application.tutor.username }}</h3>
+                <p>{{ application.pitch }}</p>
+                {% if skill_request.status == "open" and application.status == "pending" %}
+                    <form method="post" action="{% url 'skill_request_application_accept' application.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="primary-button">Accept Tutor</button>
+                    </form>
+                {% endif %}
+            </article>
+        {% empty %}
+            <p class="muted">No applications yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
