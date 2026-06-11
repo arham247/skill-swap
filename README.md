@@ -4,6 +4,7 @@ SkillSwap is a peer-to-peer skill exchange platform built with Django.
 
 ## Included
 
+
 - Custom user model with registration, login/logout, profile editing, and OTP-based password reset
 - Skill listing create, read, update, and delete flows
 - Search and category filtering for listings
